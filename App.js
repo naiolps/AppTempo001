@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet,ImageBackground, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import Tempo from './componentes/Tempo';
 import Api from './componentes/API';
 
@@ -7,10 +7,13 @@ import Api from './componentes/API';
 
 export default function App() {
   const [dados, setDados] = useState("");
+  const [cidade, setCidade] = useState("");
 
-  async function CarregaDados(){
-    const response = await Api.get(`weather?array_limit=1&fields=only_results,temp,city_name,description,forecast,max,min,date&key=281e8436&city_name=mongagua,SP`)
-    setDados(Response.data.forecast[0]);
+
+  
+  async function carregaDados(){
+    const response = await Api.get(`weather?array_limit=2&fields=only_results,temp,city_name,time,description,forecast,max,min,date&key=c03b5090&city_name=${cidade}`)
+    setDados(response.data);
   }
   return (
     <View style={styles.container}>
@@ -20,27 +23,31 @@ export default function App() {
       <View style={styles.bloco}>
         <Text style={styles.label}>Cidade:</Text>
         <TextInput
-        palceholder='digite o nome de uma cidade'
-        style={styles.input}
+          style={styles.input}
+          placeholder='Digite aqui sua cidade'
+          keyboardType='text'
+          onChangeText={(value)=>setCidade(value)}
         />
-      </View>
-    <View style={styles.bloco}>
-      <TouchableOpacity style={styles.botao} onPress={CarregaDados}>
-        <Text style={styles.textoBotao}>Buscar</Text>
-      </TouchableOpacity >
+        <TouchableOpacity
+         style={styles.botao}
+         onPress={carregaDados}
+        >
+        <Text style={styles.textoBotao}> Buscar </Text>
+        </TouchableOpacity>
     </View>
     <View style={styles.bloco}>
        <Tempo clima={dados}/>
     </View>
     </View>
        
+
+      
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor:'white'
+    flex: 1
     
   },
   titulo:{
@@ -68,5 +75,32 @@ const styles = StyleSheet.create({
   textoBotao:{
     fontSize:20,
     color: '#fff'
+  },
+  image: {
+    flex: 1,
+    justifyContent: "center"
+  },
+  text: {
+    color: "white",
+    fontSize: 42,
+    lineHeight: 84,
+    fontWeight: "bold",
+    textAlign: "center",
+    backgroundColor: "#000000c0"
+  },
+  image: {
+    flex: 1,
+    justifyContent: "center"
+  },
+  text: {
+    color: "white",
+    fontSize: 42,
+    lineHeight: 84,
+    fontWeight: "bold",
+    textAlign: "center",
+    backgroundColor: "#000000c0"
   }
 });
+
+
+
