@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet,ImageBackground, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { StyleSheet,ImageBackground, Text, TextInput, View, TouchableOpacity, FlatList} from 'react-native';
 import Tempo from './componentes/Tempo';
 import Api from './componentes/API';
+
 
 
 
@@ -13,7 +14,7 @@ export default function App() {
   
   async function carregaDados(){
     const response = await Api.get(`weather?array_limit=2&fields=only_results,temp,city_name,time,description,forecast,max,min,date&key=c03b5090&city_name=${cidade}`)
-    setDados(response.data);
+    setDados(response.data.forecast);
   }
   return (
     <View style={styles.container}>
@@ -36,7 +37,21 @@ export default function App() {
         </TouchableOpacity>
     </View>
     <View style={styles.bloco}>
-       <Tempo clima={dados}/>
+      {/* 
+       <Tempo clima={dados}/>*/}
+       <FlatList
+       data={dados}
+       renderItem={({item})=>{
+        return(
+          <View style={styles.tempo}>
+            <Text>Data: {item.date}</Text>
+            <Text>Max: {item.max}</Text>
+            <Text>min: {item.min}</Text>
+            <Text>descrição: {item.description}</Text>
+            </View>
+        );
+       }}
+       />
     </View>
     </View>
        
@@ -50,13 +65,18 @@ const styles = StyleSheet.create({
     flex: 1
     
   },
+  tempo:{
+    marginLeft:'10%',
+    marginBottom:10,
+
+  },
   titulo:{
     fontSize:30,
     textAlign:'center',
     marginTop:50
   },
   label:{
-     fontSIZE:30
+     fontSize:30
   },
   bloco:{
     marginTop:30,
